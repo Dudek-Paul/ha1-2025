@@ -1,5 +1,7 @@
 package htw.berlin.prog2.ha1;
 
+// Paul Dudek s0563692 16.04.2024
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
