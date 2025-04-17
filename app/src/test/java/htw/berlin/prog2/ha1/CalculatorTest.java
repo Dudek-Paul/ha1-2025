@@ -90,7 +90,23 @@ class CalculatorTest {
         assertEquals(expected, actual);
     }
 
+    // Aufgabe 1 Neuer Grüner Test
+    @Test
+    @DisplayName("should display result after multiplying two positive multi-digit numbers")
+    void testPositiveMultiplication() {
+        Calculator calc = new Calculator();
 
-    //TODO hier weitere Tests erstellen
+        calc.pressDigitKey(3);
+        calc.pressDigitKey(0);
+        calc.pressBinaryOperationKey("x");  // Zuvor ungetestete Funktionalität
+        calc.pressDigitKey(3);
+        calc.pressDigitKey(0);
+        calc.pressEqualsKey();
+
+        String expected = "900";
+        String actual = calc.readScreen();
+
+        assertEquals(expected, actual);
+    }
 }
 
