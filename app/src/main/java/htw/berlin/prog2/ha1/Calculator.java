@@ -22,6 +22,20 @@ public class Calculator {
     }
 
     /**
+     * @return den vorherigen Bildschirminhalt als double
+     */
+    public double readLatestValue() {
+        return latestValue;
+    }
+
+    /**
+     * @return die letzte Operation als String
+     */
+    public String readLatestOperation() {
+        return latestOperation;
+    }
+
+    /**
      * Empfängt den Wert einer gedrückten Zifferntaste. Da man nur eine Taste auf einmal
      * drücken kann muss der Wert positiv und einstellig sein und zwischen 0 und 9 liegen.
      * Führt in jedem Fall dazu, dass die gerade gedrückte Ziffer auf dem Bildschirm angezeigt

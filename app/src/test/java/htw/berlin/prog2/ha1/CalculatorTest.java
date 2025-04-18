@@ -108,5 +108,81 @@ class CalculatorTest {
 
         assertEquals(expected, actual);
     }
+
+    // Aufgabe 2 Roter Test
+    @Test
+    @DisplayName("should handle screen value, latest operation and latest value correctly when clearing the screen twice after an addition")
+    void testDoubleClearScreenAfterAddition() {
+        Calculator calc = new Calculator();
+
+        calc.pressDigitKey(2);
+        calc.pressDigitKey(0);
+        calc.pressBinaryOperationKey("+");
+        calc.pressDigitKey(2);
+        calc.pressDigitKey(0);
+        calc.pressEqualsKey();
+
+        calc.pressClearKey();                                   // First Clear Press
+
+        String expectedScreenFirstClear = "0";                  // 0 wird angezeigt
+        double expectedLatestValueFirstClear = 40.0;            // Letzter Wert bleibt erhalten
+        String expectedLatestOperationFirstClear = "+";         // Letzter Operator bleibt erhalten
+
+        String actualScreen = calc.readScreen();
+        double actualLatestValue = calc.readLatestValue();
+        String actualLatestOperation = calc.readLatestOperation();
+
+        assertEquals(expectedScreenFirstClear, actualScreen);
+        assertEquals(expectedLatestValueFirstClear, actualLatestValue);
+        assertEquals(expectedLatestOperationFirstClear, actualLatestOperation);
+
+        calc.pressClearKey();                                   // Second Clear Press
+
+        String expectedScreenSecondClear = "0";                 // 0 wird angezeigt
+        double expectedLatestValueSecondClear = 0.0;            // Letzter Wert zurückgesetzt
+        String expectedLatestOperationSecondClear = "";         // Letzter Operator zurückgesetzt
+
+        actualScreen = calc.readScreen();
+        actualLatestValue = calc.readLatestValue();
+        actualLatestOperation = calc.readLatestOperation();
+
+        assertEquals(expectedScreenSecondClear, actualScreen);
+        assertEquals(expectedLatestValueSecondClear, actualLatestValue);
+        assertEquals(expectedLatestOperationSecondClear, actualLatestOperation);
+    }
+
+    @Test
+    @DisplayName("should display result after adding two positive multi-digit floating point numbers without rounding errors")
+    void testPositiveAdditionFloat() {
+        Calculator calc = new Calculator();
+
+        calc.pressDigitKey(0);
+        calc.pressDotKey();
+        calc.pressDigitKey(0);
+        calc.pressDigitKey(1);
+        calc.pressBinaryOperationKey("+");
+        calc.pressDigitKey(0);
+        calc.pressDotKey();
+        calc.pressDigitKey(0);
+        calc.pressDigitKey(2);
+        calc.pressBinaryOperationKey("+");
+        calc.pressDigitKey(0);
+        calc.pressDotKey();
+        calc.pressDigitKey(0);
+        calc.pressDigitKey(3);
+        calc.pressBinaryOperationKey("+");
+        calc.pressDigitKey(0);
+        calc.pressDotKey();
+        calc.pressDigitKey(0);
+        calc.pressDigitKey(4);
+        calc.pressEqualsKey();
+
+        String expected = "0.1";
+        String actual = calc.readScreen();
+
+        assertEquals(expected, actual);
+    }
+
+
 }
 
