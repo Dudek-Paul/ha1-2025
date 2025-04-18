@@ -125,11 +125,11 @@ class CalculatorTest {
         calc.pressClearKey();                                   // First Clear Press
 
         String expectedScreenFirstClear = "0";                  // 0 wird angezeigt
-        double expectedLatestValueFirstClear = 40.0;            // Letzter Wert bleibt erhalten
+        String expectedLatestValueFirstClear = "20";            // Letzter Wert bleibt erhalten
         String expectedLatestOperationFirstClear = "+";         // Letzter Operator bleibt erhalten
 
         String actualScreen = calc.readScreen();
-        double actualLatestValue = calc.readLatestValue();
+        String actualLatestValue = calc.readLatestValue();
         String actualLatestOperation = calc.readLatestOperation();
 
         assertEquals(expectedScreenFirstClear, actualScreen);
@@ -139,7 +139,7 @@ class CalculatorTest {
         calc.pressClearKey();                                   // Second Clear Press
 
         String expectedScreenSecondClear = "0";                 // 0 wird angezeigt
-        double expectedLatestValueSecondClear = 0.0;            // Letzter Wert zurückgesetzt
+        String expectedLatestValueSecondClear = "0";            // Letzter Wert zurückgesetzt
         String expectedLatestOperationSecondClear = "";         // Letzter Operator zurückgesetzt
 
         actualScreen = calc.readScreen();

@@ -10,9 +10,11 @@ public class Calculator {
 
     private String screen = "0";
 
-    private double latestValue;
+    private String latestValue = "0";
 
     private String latestOperation = "";
+
+    private boolean firstClearPressed = false;
 
     /**
      * @return den aktuellen Bildschirminhalt als String
@@ -24,7 +26,7 @@ public class Calculator {
     /**
      * @return den vorherigen Bildschirminhalt als double
      */
-    public double readLatestValue() {
+    public String readLatestValue() {
         return latestValue;
     }
 
@@ -45,7 +47,9 @@ public class Calculator {
     public void pressDigitKey(int digit) {
         if(digit > 9 || digit < 0) throw new IllegalArgumentException();
 
-        if(screen.equals("0") || latestValue == Double.parseDouble(screen)) screen = "";
+        if(screen.equals("0") || screen.equals(latestValue)) {
+            screen = "";
+        }
 
         screen = screen + digit;
     }
@@ -59,9 +63,15 @@ public class Calculator {
      * im Ursprungszustand ist.
      */
     public void pressClearKey() {
-        screen = "0";
-        latestOperation = "";
-        latestValue = 0.0;
+        if(!firstClearPressed) {
+            screen = "0";
+            firstClearPressed = true;
+        } else {
+            screen = "0";
+            latestValue = "0";
+            latestOperation = "";
+            firstClearPressed = false;
+        }
     }
 
     /**
@@ -73,8 +83,17 @@ public class Calculator {
      * auf dem Bildschirm angezeigt. Falls hierbei eine Division durch Null auftritt, wird "Error" angezeigt.
      * @param operation "+" für Addition, "-" für Substraktion, "x" für Multiplikation, "/" für Division
      */
-    public void pressBinaryOperationKey(String operation)  {
-        latestValue = Double.parseDouble(screen);
+    public void pressBinaryOperationKey(String operation) {
+        var screenBefore = screen;
+        var result = switch (operation) {
+            case "+" -> Double.parseDouble(latestValue) + Double.parseDouble(screen);
+            case "-" -> Double.parseDouble(latestValue) - Double.parseDouble(screen);
+            case "x" -> latestValue.equals("0") ? Double.parseDouble(screen) : Double.parseDouble(latestValue) * Double.parseDouble(screen);
+            case "/" ->  latestValue.equals("0") ? Double.parseDouble(screen) : Double.parseDouble(latestValue) / Double.parseDouble(screen);
+            default -> throw new IllegalArgumentException();
+        };
+        screen = Double.parseDouble(screenBefore) == result ? screenBefore : String.valueOf(result);
+        latestValue = Double.parseDouble(screenBefore) == Double.parseDouble(screen) ? screenBefore : screen;
         latestOperation = operation;
     }
 
@@ -86,7 +105,7 @@ public class Calculator {
      * @param operation "√" für Quadratwurzel, "%" für Prozent, "1/x" für Inversion
      */
     public void pressUnaryOperationKey(String operation) {
-        latestValue = Double.parseDouble(screen);
+        latestValue = screen;
         latestOperation = operation;
         var result = switch(operation) {
             case "√" -> Math.sqrt(Double.parseDouble(screen));
@@ -132,16 +151,24 @@ public class Calculator {
      * und das Ergebnis direkt angezeigt.
      */
     public void pressEqualsKey() {
-        var result = switch(latestOperation) {
-            case "+" -> latestValue + Double.parseDouble(screen);
-            case "-" -> latestValue - Double.parseDouble(screen);
-            case "x" -> latestValue * Double.parseDouble(screen);
-            case "/" -> latestValue / Double.parseDouble(screen);
+        screen = switch(latestOperation) {
+            case "+" -> String.valueOf(Double.parseDouble(latestValue) + Double.parseDouble(screen));
+            case "-" -> String.valueOf(Double.parseDouble(latestValue) - Double.parseDouble(screen));
+            case "x" -> String.valueOf(Double.parseDouble(latestValue) * Double.parseDouble(screen));
+            case "/" -> String.valueOf(Double.parseDouble(latestValue) / Double.parseDouble(screen));
             default -> throw new IllegalArgumentException();
         };
-        screen = Double.toString(result);
         if(screen.equals("Infinity")) screen = "Error";
+        if(screen.equals("NaN")) screen = "Error";
         if(screen.endsWith(".0")) screen = screen.substring(0,screen.length()-2);
         if(screen.contains(".") && screen.length() > 11) screen = screen.substring(0, 10);
+    }
+
+    public boolean isFirstClearPressed() {
+        return firstClearPressed;
+    }
+
+    public void setFirstClearPressed(boolean firstClearPressed) {
+        this.firstClearPressed = firstClearPressed;
     }
 }
